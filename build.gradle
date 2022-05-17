@@ -1,0 +1,42 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'java'
+}
+
+group 'com.aaronjyoder'
+version '1.0-0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.aaronjyoder.Main', "Multi-Release": true
+    }
+    from {
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("com.squareup.moshi:moshi-kotlin:1.13.0")
+    implementation "org.apache.logging.log4j:log4j-slf4j18-impl:2.17.2"
+
+    implementation 'net.openhft:affinity:3.21ea83'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+}
+
+test {
+    useJUnitPlatform()
+}
