@@ -57,8 +57,9 @@ public class Main {
       var cpu = hal.getProcessor();
       System.out.println(cpu.getProcessorIdentifier().getName());
       String cpuName = cpu.getProcessorIdentifier().getName().toLowerCase()
-          .replaceAll("processor", "")
-          .trim().replaceAll("\s", "-")
+          .replaceAll("processor", "").trim()
+          .replaceAll("\s+", "\s")
+          .replaceAll("\s", "-")
           .replaceAll("[^a-zA-Z0-9\\.\\-]", "");
 
       String fileName = "collate-" + cpuName + "-results";
