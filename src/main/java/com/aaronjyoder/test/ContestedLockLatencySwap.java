@@ -24,7 +24,7 @@ public class ContestedLockLatencySwap implements CoreLatencyTest {
     long startB = 2;
 
     var tB = new Thread(() -> {
-      try (AffinityLock lock = AffinityLock.acquireLock(threadB)) {
+      try (AffinityLock lock = threadB == 0 ? AffinityLock.acquireLock("csv:0") : AffinityLock.acquireLock(threadB)) {
 
         long current = startB;
         while (current < iterations) {
@@ -40,7 +40,7 @@ public class ContestedLockLatencySwap implements CoreLatencyTest {
     tB.setDaemon(true);
     tB.start();
 
-    try (AffinityLock lock = AffinityLock.acquireLock(threadA)) {
+    try (AffinityLock lock = threadA == 0 ? AffinityLock.acquireLock("csv:0") : AffinityLock.acquireLock(threadA)) {
 
       start = Instant.now();
       long current = startA;
