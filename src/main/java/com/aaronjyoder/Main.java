@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
+import oshi.SystemInfo;
 
 public class Main {
 
@@ -36,7 +37,7 @@ public class Main {
       for (int threadB = 0; threadB < threadCount; threadB++) {
         if (threadA != threadB) {
           System.out.print("\rCurrently testing thread " + threadA + " with thread " + threadB + "...");
-          double latency = new ContestedLockLatencySwap(100_000_000L).latencyNanos(threadA, threadB);
+          double latency = new ContestedLockLatencySwap(1_000_000L).latencyNanos(threadA, threadB);
           result[threadA][threadB] = latency;
         } else {
           result[threadA][threadB] = -1L;
@@ -50,13 +51,24 @@ public class Main {
 
   private static void saveToFile(double[][] table) {
     try {
+      SystemInfo si = new SystemInfo();
+      var hal = si.getHardware();
+      var cpu = hal.getProcessor();
+      System.out.println(cpu.getProcessorIdentifier().getName());
+      String cpuName = cpu.getProcessorIdentifier().getName().toLowerCase()
+          .replaceAll("processor", "")
+          .replaceAll("[^a-zA-Z0-9\\.\\-]", "")
+          .trim();
+
+      String fileName = "collate-" + cpuName + "-results";
+
       Path dir = Path.of("").toAbsolutePath();
-      Path jsonPath = dir.resolve("collate-results.json");
-      Path csvPath = dir.resolve("collate-results.csv");
+      Path jsonPath = dir.resolve(fileName + ".json");
+      Path csvPath = dir.resolve(fileName + ".csv");
 
       Files.createDirectories(dir); // Hopefully not necessary but just in case
 
-      System.out.println("Results saved to file in current directory: 'collate-results.csv' and 'collate-results.json'");
+      System.out.println("Results saved to file in current directory: '" + fileName + ".csv' and '" + fileName + ".json'");
 
       // Json
       MoshiUtil.write(jsonPath, table.getClass(), table);
