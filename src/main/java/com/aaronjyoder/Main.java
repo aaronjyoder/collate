@@ -30,6 +30,7 @@ public class Main {
     }
   }
 
+  // TODO: Check for negative numbers or 0 in the table results and throw an error if there are any
   private static double[][] generateCoreLatencyTable(int threadCount) throws InterruptedException {
     double[][] result = new double[threadCount][threadCount];
     for (int threadA = 0; threadA < threadCount; threadA++) {
