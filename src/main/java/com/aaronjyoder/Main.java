@@ -57,8 +57,8 @@ public class Main {
       System.out.println(cpu.getProcessorIdentifier().getName());
       String cpuName = cpu.getProcessorIdentifier().getName().toLowerCase()
           .replaceAll("processor", "")
-          .replaceAll("[^a-zA-Z0-9\\.\\-]", "")
-          .trim();
+          .trim().replaceAll("\s", "-")
+          .replaceAll("[^a-zA-Z0-9\\.\\-]", "");
 
       String fileName = "collate-" + cpuName + "-results";
 
