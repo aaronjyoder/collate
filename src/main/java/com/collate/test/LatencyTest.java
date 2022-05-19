@@ -1,4 +1,4 @@
-package com.collate;
+package com.collate.test;
 
 public interface LatencyTest {
 

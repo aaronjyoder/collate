@@ -1,5 +1,6 @@
 package com.collate;
 
+import com.collate.test.LatencyTest;
 import com.collate.test.cpu.ContestedLockLatencyTest;
 import com.collate.util.MoshiUtil;
 import java.io.IOException;
@@ -17,17 +18,58 @@ public class Main {
       System.out.println("Threads detected: " + threadCount);
 
       System.out.println("This program tests round-trip core-to-core latency using a contested lock test that utilizes atomic compare and set instructions.");
-
       System.out.println();
+
+      // Latency test begins
+      final int MAX_RETRIES = 5;
       System.out.println("The latency test will now begin. It may take some time, so please be patient.");
-      TimeUnit.SECONDS.sleep(2);
-      double[][] table = generateCoreLatencyTable(threadCount);
+      TimeUnit.SECONDS.sleep(1);
+      double[][] table = generateThreadLatencyTable(threadCount, new ContestedLockLatencyTest(100_000_000L));
+      for (int i = 0; i < MAX_RETRIES; i++) {
+        if (!containsUnexpectedNegative(table)) {
+          break;
+        }
+        System.out.println("The results contained an unexpected negative value, invalidating the results. Waiting 5 seconds, and then trying again.");
+        System.out.println();
+        TimeUnit.SECONDS.sleep(5);
+        System.out.println("-- Retry " + (i + 1) + " of " + MAX_RETRIES + " --");
+        table = generateThreadLatencyTable(threadCount, new ContestedLockLatencyTest(100_000_000L));
+      }
+      // Save to file
       System.out.println("The latency test has finished. Saving results to file in current directory.");
       saveToFile(table);
     } catch (InterruptedException e) {
       System.out.println("Program halted due to the main thread being interrupted while sleeping.");
       throw new RuntimeException(e);
     }
+  }
+
+  private static double[][] generateThreadLatencyTable(int threadCount, LatencyTest test) {
+    double[][] result = new double[threadCount][threadCount];
+    for (int threadA = 0; threadA < threadCount; threadA++) {
+      System.out.println("Testing thread " + threadA + " with all other threads.");
+      for (int threadB = 0; threadB < threadCount; threadB++) {
+        if (threadA != threadB) {
+          System.out.print("\rCurrently testing thread " + threadA + " with thread " + threadB + "...");
+          double element = test.latencyNanos(threadA, threadB);
+          result[threadA][threadB] = element;
+        } else {
+          result[threadA][threadB] = -1L;
+        }
+      }
+    }
+    return result;
+  }
+
+  private static boolean containsUnexpectedNegative(double[][] table) {
+    for (int x = 0; x < table.length; x++) {
+      for (int y = 0; y < table.length; y++) {
+        if (x != y && table[x][y] < 0) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   // TODO: Check for negative numbers or 0 in the table results and throw an error if there are any

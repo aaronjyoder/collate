@@ -1,6 +1,6 @@
 package com.collate.test.cpu;
 
-import com.collate.LatencyTest;
+import com.collate.test.LatencyTest;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.concurrent.atomic.AtomicLong;
