@@ -58,7 +58,7 @@ public class Main {
         if (threadA != threadB) {
           System.out.print("\rCurrently testing thread " + threadA + " with thread " + threadB + "...");
           double element = test.latencyNanos(threadA, threadB);
-          result[threadA][threadB] = -1;
+          result[threadA][threadB] = element;
         } else {
           result[threadA][threadB] = -1L;
         }
