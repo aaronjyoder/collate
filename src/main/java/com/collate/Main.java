@@ -72,26 +72,6 @@ public class Main {
     return false;
   }
 
-  // TODO: Check for negative numbers or 0 in the table results and throw an error if there are any
-  private static double[][] generateCoreLatencyTable(int threadCount) throws InterruptedException {
-    double[][] result = new double[threadCount][threadCount];
-    for (int threadA = 0; threadA < threadCount; threadA++) {
-      System.out.println("Testing thread " + threadA + " with all other threads.");
-      for (int threadB = 0; threadB < threadCount; threadB++) {
-        if (threadA != threadB) {
-          System.out.print("\rCurrently testing thread " + threadA + " with thread " + threadB + "...");
-          double latency = new ContestedLockLatencyTest(100_000_000L).latencyNanos(threadA, threadB);
-          result[threadA][threadB] = latency;
-        } else {
-          result[threadA][threadB] = -1L;
-        }
-      }
-      System.out.println("\rTests for thread " + threadA + " complete.\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\n");
-      TimeUnit.SECONDS.sleep(1);
-    }
-    return result;
-  }
-
   // TODO: Linux seems to sometimes sort the cores differently, so need to read from `grep -E 'processor|core id' /proc/cpuinfo` and sort before writing to file
   private static void saveToFile(double[][] table) {
     try {
