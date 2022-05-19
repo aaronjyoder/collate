@@ -21,7 +21,7 @@ public class Main {
       System.out.println();
 
       // Latency test begins
-      final long ITERATIONS = 1_000_000L;
+      final long ITERATIONS = 100_000_000L;
       final int MAX_RETRIES = 5;
       System.out.println("The latency test will now begin. It may take some time, so please be patient.");
       TimeUnit.SECONDS.sleep(1);
