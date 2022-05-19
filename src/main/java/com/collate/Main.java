@@ -57,6 +57,7 @@ public class Main {
           result[threadA][threadB] = -1L;
         }
       }
+      System.out.println("\rTests for thread " + threadA + " complete.\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\n");
     }
     return result;
   }
