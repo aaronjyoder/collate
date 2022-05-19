@@ -21,10 +21,11 @@ public class Main {
       System.out.println();
 
       // Latency test begins
+      final long ITERATIONS = 100_000_000L;
       final int MAX_RETRIES = 5;
       System.out.println("The latency test will now begin. It may take some time, so please be patient.");
       TimeUnit.SECONDS.sleep(1);
-      double[][] table = generateThreadLatencyTable(threadCount, new ContestedLockLatencyTest(100_000_000L));
+      double[][] table = generateThreadLatencyTable(threadCount, new ContestedLockLatencyTest(ITERATIONS));
       for (int i = 0; i < MAX_RETRIES; i++) {
         if (!containsUnexpectedNegative(table)) {
           break;
@@ -33,7 +34,7 @@ public class Main {
         System.out.println();
         TimeUnit.SECONDS.sleep(5);
         System.out.println("-- Retry " + (i + 1) + " of " + MAX_RETRIES + " --");
-        table = generateThreadLatencyTable(threadCount, new ContestedLockLatencyTest(100_000_000L));
+        table = generateThreadLatencyTable(threadCount, new ContestedLockLatencyTest(ITERATIONS));
       }
       // Save to file
       System.out.println("The latency test has finished. Saving results to file in current directory.");
@@ -52,7 +53,7 @@ public class Main {
         if (threadA != threadB) {
           System.out.print("\rCurrently testing thread " + threadA + " with thread " + threadB + "...");
           double element = test.latencyNanos(threadA, threadB);
-          result[threadA][threadB] = element;
+          result[threadA][threadB] = -1;
         } else {
           result[threadA][threadB] = -1L;
         }
