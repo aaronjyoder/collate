@@ -3,8 +3,8 @@ plugins {
     id 'java'
 }
 
-group 'com.aaronjyoder'
-version '1.0.2'
+group 'com.collate'
+version '1.0.3'
 
 java {
     toolchain {

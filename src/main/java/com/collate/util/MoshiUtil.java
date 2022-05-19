@@ -1,4 +1,4 @@
-package com.aaronjyoder.util;
+package com.collate.util;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;

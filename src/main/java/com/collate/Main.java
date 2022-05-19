@@ -1,7 +1,7 @@
-package com.aaronjyoder;
+package com.collate;
 
-import com.aaronjyoder.test.ContestedLockLatencySwap;
-import com.aaronjyoder.util.MoshiUtil;
+import com.collate.test.cpu.ContestedLockLatencyTest;
+import com.collate.util.MoshiUtil;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,13 +14,13 @@ public class Main {
     try {
       int threadCount = Runtime.getRuntime().availableProcessors();
       System.out.println("-- Collate: CPU Latency Testing --");
-      System.out.println("Threads detected: " + threadCount + "\n");
+      System.out.println("Threads detected: " + threadCount);
 
       System.out.println("This program tests round-trip core-to-core latency using a contested lock test that utilizes atomic compare and set instructions.");
 
-      TimeUnit.SECONDS.sleep(1);
-
+      System.out.println();
       System.out.println("The latency test will now begin. It may take some time, so please be patient.");
+      TimeUnit.SECONDS.sleep(2);
       double[][] table = generateCoreLatencyTable(threadCount);
       System.out.println("The latency test has finished. Saving results to file in current directory.");
       saveToFile(table);
@@ -38,7 +38,7 @@ public class Main {
       for (int threadB = 0; threadB < threadCount; threadB++) {
         if (threadA != threadB) {
           System.out.print("\rCurrently testing thread " + threadA + " with thread " + threadB + "...");
-          double latency = new ContestedLockLatencySwap(100_000_000L).latencyNanos(threadA, threadB);
+          double latency = new ContestedLockLatencyTest(100_000_000L).latencyNanos(threadA, threadB);
           result[threadA][threadB] = latency;
         } else {
           result[threadA][threadB] = -1L;
@@ -61,7 +61,7 @@ public class Main {
           .replaceAll("processor", "").trim()
           .replaceAll("\s+", "\s")
           .replaceAll("\s", "-")
-          .replaceAll("[^a-zA-Z0-9\\.\\-]", "");
+          .replaceAll("[^a-zA-Z\\d.\\-]", "");
 
       String fileName = "collate-" + cpuName + "-results";
 

@@ -1,16 +1,16 @@
-package com.aaronjyoder.test;
+package com.collate.test.cpu;
 
-import com.aaronjyoder.CoreLatencyTest;
+import com.collate.LatencyTest;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.concurrent.atomic.AtomicLong;
 import net.openhft.affinity.AffinityLock;
 
-public class ContestedLockLatencySwap implements CoreLatencyTest {
+public class ContestedLockLatencyTest implements LatencyTest {
 
   private final long iterations;
 
-  public ContestedLockLatencySwap(final long iterations) {
+  public ContestedLockLatencyTest(final long iterations) {
     this.iterations = iterations;
   }
 
