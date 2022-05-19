@@ -21,7 +21,7 @@ public class Main {
       System.out.println();
 
       // Latency test begins
-      final long ITERATIONS = 100_000_000L;
+      final long ITERATIONS = 1_000_000L;
       final int MAX_RETRIES = 5;
       System.out.println("The latency test will now begin. It may take some time, so please be patient.");
       TimeUnit.SECONDS.sleep(1);
@@ -37,7 +37,6 @@ public class Main {
         table = generateThreadLatencyTable(threadCount, new ContestedLockLatencyTest(ITERATIONS));
       }
       if (containsUnexpectedNegative(table)) {
-        System.out.println();
         System.out.println("The table still contains invalid results after 5 retries. Program exiting early. Results have not been saved.");
         return;
       }
@@ -85,7 +84,6 @@ public class Main {
       SystemInfo si = new SystemInfo();
       var hal = si.getHardware();
       var cpu = hal.getProcessor();
-      System.out.println(cpu.getProcessorIdentifier().getName());
       String cpuName = cpu.getProcessorIdentifier().getName().toLowerCase()
           .replaceAll("processor", "").trim()
           .replaceAll("\s+", "\s")
