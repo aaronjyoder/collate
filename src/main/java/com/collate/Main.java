@@ -41,7 +41,7 @@ public class Main {
         return;
       }
       // Save to file
-      System.out.println("The latency test has finished. Saving results to file in current directory.");
+      System.out.println("The latency test has finished successfully. Saving results to file in current directory.");
       saveToFile(table);
     } catch (InterruptedException e) {
       System.out.println("Program halted due to the main thread being interrupted while sleeping.");
