@@ -36,6 +36,11 @@ public class Main {
         System.out.println("-- Retry " + (i + 1) + " of " + MAX_RETRIES + " --");
         table = generateThreadLatencyTable(threadCount, new ContestedLockLatencyTest(ITERATIONS));
       }
+      if (containsUnexpectedNegative(table)) {
+        System.out.println();
+        System.out.println("The table still contains invalid results after 5 retries. Program exiting early. Results have not been saved.");
+        return;
+      }
       // Save to file
       System.out.println("The latency test has finished. Saving results to file in current directory.");
       saveToFile(table);
